@@ -119,7 +119,9 @@ const geneValue = (gene: Gene): Value => {
 
 // To get an organism's phenotype, I can convert each gene to its value and join them into a string.
 const phenotype = (organism: Organism): string => {
-  return organism.chromosome.map(geneValue).join(" ");
+  return organism.chromosome
+    .map(geneValue)
+    .join(" ");
 };
 
 // I also want a way to get an organism's cleaned-up phenotype, which is safe to be evaluated. That means I first need a way to clean the genes of a chromosome, in accordance with the plan: remove any junk genes (along with their preceeding operators).
@@ -142,6 +144,26 @@ const cleanPhenotype = (organism: Organism): string => {
   });
 };
 
+// To evaluate the phenotype of an organism as a math string, I'm going to take the easy route and use the built-in eval function, given the assumption that the string is already cleaned.
+// I have to be careful here. For one, I need to be aware that using this evaluation method means the standard order of operations is being applied. Also, it's possible for the result to be NaN or infinity, if a division by 0 happens. I'll have to remember to handle these special cases when doing fitness evaluation.
+const evaluateMath = (mathStr: string): number => Number(eval(mathStr));
+
+// Now to evaluate the fitness of an organism. This part is tricky because I want organisms to have their fitness stored as part of their data. So, I need to evaluate the fitness of a future organism by evaluating its chromosome-to-be, relative to the target number.
+// The resulting fitness will be a number between 0 and 1, with 1 being perfect fitness.
+const evaluateFitness = (chromosome: Chromosome, target: number): number => {
+  const mathStr = cleanChromosome(chromosome)
+    .map(geneValue)
+    .join(" ");
+  const n = evaluateMath(mathStr);
+  
+  if (isNaN(n) || n === Infinity) {
+    // This is as far from the target number as it can get, so let's just say the fitness is 0.
+    return 0;
+  } else {
+    return 1 / Math.abs((target - n) + 1);
+  }
+};
+
 const chrom1: Chromosome = [
   [0, 1, 1, 0], // 6
   [0, 0], // +
@@ -162,3 +184,5 @@ const organism1: Organism = {
 console.log('organism1');
 console.log('phenotype:', phenotype(organism1));
 console.log('cleanPhenotype:', cleanPhenotype(organism1));
+console.log('result:', evaluateMath(cleanPhenotype(organism1)));
+console.log('fitness:', evaluateFitness(organism1.chromosome, 42));
