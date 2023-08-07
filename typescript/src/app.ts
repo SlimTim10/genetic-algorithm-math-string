@@ -8,8 +8,6 @@ import {
   last,
 } from './util';
 
-// This presents a linear approach to solving this problem, but real programming is rarely done in a linear fashion. I would normally create functions with gaps to be filled, going back and forth between them a lot. However, the first step of planning the types is something that I do.
-
 // Planning types first.
 
 // An organism is made up of one chromosome and has a fitness number.
@@ -162,7 +160,7 @@ const evaluateFitness = (chromosome: Chromosome, target: number): number => {
   const n = evaluateMath(mathStr);
   
   if (isNaN(n) || n === Infinity) {
-    // This is as far from the target number as it can get, so let's just say the fitness is 0.
+    // This is as far from the target number as it can be, so let's just say the fitness is 0.
     return 0;
   } else {
     return 1 / (Math.abs(target - n) + 1);
