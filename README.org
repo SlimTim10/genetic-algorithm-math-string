@@ -1,0 +1,25 @@
+* Genetic Algorithm Math String
+
+This is my implementation of the genetic algorithm project described here:
+
+https://timjohns.ca/build-your-own-genetic-algorithm.html
+
+** TypeScript
+
+To install the dependencies:
+
+#+begin_src sh
+npm i
+#+end_src
+
+To run the code once:
+
+#+begin_src sh
+./run
+#+end_src
+
+To continuously run the code on file changes:
+
+#+begin_src sh
+./watch
+#+end_src
